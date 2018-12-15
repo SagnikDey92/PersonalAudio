@@ -24,7 +24,7 @@ snr1 = sigp1-SNR;
 sigma2v = 10^(snr1/10);
 y = ynoise;
 H=zeros(n, 1);
-epsilon=1e-13;%using very low epsilon
+epsilon=1e-10;%using very low epsilon
 index=1;
 Xsize=size(x, 1);
 Ru=epsilon*eye(n);
@@ -32,7 +32,7 @@ threshlow = 1e-5;
 %sigma2v = 1e-13;
 %sigma2w = 1e-13;
 while index < Xsize - n
-    if(mod(index, 1600)==0&&2==3)
+    if(mod(index, 1600)==0)
         h = awgn(h, SNR);
         y = conv(x, h);
         y = awgn(y, SNR);

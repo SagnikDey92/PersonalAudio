@@ -32,11 +32,12 @@ threshlow = 1e-5;
 %sigma2v = 1e-13;
 %sigma2w = 1e-13;
 while index < Xsize - n
-    if(mod(index, 1600)==0)
+    if(mod(index, 1000)==0)
         h = awgn(h, SNR);
         y = conv(x, h);
         y = awgn(y, SNR);
         Ru = epsilon*eye(n);
+        index  = 1;
     end
     xf = splitv(x, index, n);%changed xf
     Rm = Ru + sigma2w*eye(n);

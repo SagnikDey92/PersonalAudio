@@ -1,6 +1,6 @@
 [x,Fs] = audioread('audioshort.wav');
 x = x(:, 1);
-x = x(1:16000, 1); %cutting audio short
+x = x(1:160000, 1); %cutting audio short
 c = 340;                    % Sound velocity (m/s)
 fs = 16000;                 % Sample frequency (samples/s)
 r = [9 9 9];                % Receiver position [x y z] (m)
@@ -29,13 +29,18 @@ index=1;
 Xsize=size(x, 1);
 Ru=epsilon*eye(n);
 threshlow = 1e-5;
+%sigma2v = 1e-13;
+%sigma2w = 1e-13;
 while index < Xsize - n
-    if(mod(index, 2000)==0)
+    %{
+    if(mod(index, 1000)==0)
         h = awgn(h, SNR);
         y = conv(x, h);
         y = awgn(y, SNR);
         Ru = epsilon*eye(n);
+        index  = 1;
     end
+    
     xf = splitv(x, index, n);%changed xf
     Rm = Ru + sigma2w*eye(n);
     sigma2e = xf'*Rm*xf + sigma2v;
@@ -47,4 +52,12 @@ while index < Xsize - n
     clc;
     norm(h-flipud(H))/norm(h)*100
     index
-end   
+end  
+%plot lines for copy paste
+plot(h)
+figure
+plot(H)
+%same graph
+plot(h)
+hold on
+plot(H)

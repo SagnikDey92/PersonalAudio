@@ -32,7 +32,7 @@ threshlow = 1e-5;
 %sigma2v = 1e-13;
 %sigma2w = 1e-13;
 while index < Xsize - n
-    if(mod(index, 1000)==0)
+    if(mod(index, 1000)==0&&2==3)
         h = awgn(h, SNR);
         y = conv(x, h);
         y = awgn(y, SNR);
@@ -50,4 +50,12 @@ while index < Xsize - n
     clc;
     norm(h-flipud(H))/norm(h)*100
     index
-end   
+end  
+%plot lines for copy paste
+plot(h)
+figure
+plot(H)
+%same graph
+plot(h)
+hold on
+plot(H)

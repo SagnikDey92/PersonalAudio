@@ -1,6 +1,6 @@
 [x,Fs] = audioread('audioshort.wav');
 x = x(:, 1);
-x = x(1:160000, 1); %cutting audio short
+x = x(1:160000, 1);         % cutting audio short
 c = 340;                    % Sound velocity (m/s)
 fs = 16000;                 % Sample frequency (samples/s)
 r = [9 9 9];                % Receiver position [x y z] (m)
@@ -11,6 +11,8 @@ n = 512;                    % Number of samples
 SNR = 100;%high SNR
 h = rir_generator(c, fs, r, s, L, beta, n);
 h = h';
+h = h(200:end, 1);
+n = 512-200+1; %cutting h to remove blank part
 hnoise = awgn(h, 100)-h;
 sigp2 = 10*log10(norm(hnoise,2)^2/numel(hnoise));
 snr2 = sigp2-100;
@@ -32,7 +34,7 @@ threshlow = 1e-5;
 %sigma2v = 1e-13;
 %sigma2w = 1e-13;
 while index < Xsize - n
-    if(mod(index, 1000)==0&&2==3)
+    if(mod(index, 1000)==0)
         h = awgn(h, SNR);
         y = conv(x, h);
         y = awgn(y, SNR);

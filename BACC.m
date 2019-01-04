@@ -17,8 +17,8 @@ r = [8 8 8];
 H2 = rir_generator(c, fs, r, s, L, beta, n); %assuming Kalman gave us the right H2(dark);
 rb = conv(H1, x);
 rd = conv(H2, x);
-rb = rb(1:M, 1);
-rd = rd(1:M, 1);
+rb = rb(1:M, 1);%last m elements and flip
+rd = rd(1:M, 1);%last m elements and flip
 %K is 1 for both bright and dark
 Rb = rb'; %array of 1
 Rd = rd'; %array of 1

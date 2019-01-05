@@ -7,7 +7,7 @@ r = [9 9 9];                % Receiver position [x y z] (m)
 s = [9 7 4];                % Source position [x y z] (m)
 L = [10 10 10];             % Room dimensions [x y z] (m)
 beta = 0.4;                 % Reverberation time (s)
-n = 512;                    % Number of samples
+n = 512;                    % Number of samples(taking 1024 reveals  the current h has bumps after 512 too)
 SNR = 100;%high SNR
 
 %Generating h from rir_generator

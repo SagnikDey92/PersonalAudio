@@ -48,7 +48,7 @@ Ru=epsilon*eye(n);%Correlation matrix of u ,i.e uncertainitites in h
 while index < Xsize - n
     %After 1000 iterations h has been estimated 
     %So adding noise to h to see if Kalmann Filter is still able to estimate h
-    if(mod(index, 1000)==0)
+    if(mod(index, 1600)==0)
         h = awgn(h, SNR);       %Adding noise to h
         y = conv(x, h);         %new actual received signal
         y = awgn(y, SNR);       %new actual received signal with noise

@@ -1,0 +1,5 @@
+room config for minimum phase RIR plot (Spikes close together and decreasing order of magnitude)
+optimal delay for low error 5%
+clean it up
+
+Transmit beam forming for broadband signals

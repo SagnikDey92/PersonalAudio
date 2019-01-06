@@ -2,7 +2,7 @@
 x = x(:, 1);
 x = x(1:160000, 1);         % cutting audio short
 n = 512;                    % Number of samples(taking 1024 reveals  the current h has bumps after 512 too)
-SNR = 100;                  %high SNR
+SNR = 100;                  % high SNR
 
 %Generating h from rir_generator
 h = channel([9 7 4], [9, 9, 9], n);

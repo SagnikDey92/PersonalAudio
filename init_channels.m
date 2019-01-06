@@ -9,21 +9,19 @@ function [ dcontrol1, dcontrol2, bcontrol1, bcontrol2 ] = init_channels( darkcen
     index = 1;
     for i = brightcentre(1)-0.04 :0.01: brightcentre(1)+0.05
         for j = brightcentre(2)-0.04 :0.01: brightcentre(2)+0.05
-            for k = brightcentre(3)-0.04 :0.01: brightcentre(3)+0.05
-                bcontrol1(index, :) = channel(speaker1, [i j k], n);
-                bcontrol2(index, :) = channel(speaker2, [i j k], n);
-                index = index+1;
-            end
+            k = brightcentre(3);
+            bcontrol1(index, :) = channel(speaker1, [i j k], n);
+            bcontrol2(index, :) = channel(speaker2, [i j k], n);
+            index = index+1;
         end
     end
     index = 1;
     for i = darkcentre(1)-0.04 :0.01: darkcentre(1)+0.05
         for j = darkcentre(2)-0.04 :0.01: darkcentre(2)+0.05
-            for k = darkcentre(3)-0.04 :0.01: darkcentre(3)+0.05
-                dcontrol1(index, :) = channel(speaker1, [i j k], n);
-                dcontrol2(index, :) = channel(speaker2, [i j k], n);
-                index = index+1;
-            end
+            k = darkcentre(3);
+            dcontrol1(index, :) = channel(speaker1, [i j k], n);
+            dcontrol2(index, :) = channel(speaker2, [i j k], n);
+            index = index+1;
         end
     end
 end

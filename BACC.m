@@ -7,17 +7,22 @@ M = 1024;                   % filter length
 
 %fiddled around with speaker and control positions
 %this gives best possible output
-speaker1 = [6 2 3];
-speaker2 = [5 5 5];
+speaker1 = [5.2 2 5];
+speaker2 = [5 2 5];
+%place 10 speakers along x axis centered at 5, 2, 5
+speakers = zeros(10, 3);
+index = 1;
+for i = 4.2:0.2:6
+    speakers(index, :) = [i, 2, 5];
+    index = index+1;
+end
 
-%this position gives best output
-darkcentre = [0.4001 2 3];%basically placing dark spot as far as away as possible 
-brightcentre = [6.4001 2 3];%placing bright nearer to the speaker
-
+darkcentre = [ 2 7 5 ];
+brightcentre = [ 7 7 5 ];  
 
 %channel for control points below (1000 around dark zone and brightzone of volume 10x10x10 cm^3)
 [ dcontrol1, dcontrol2, bcontrol1, bcontrol2 ] = init_channels(darkcentre, brightcentre, speaker1, speaker2);
-K = 1000;
+K = 100;
 
 [Rb, Rd] = init_optparams( x, dcontrol1, dcontrol2, bcontrol1, bcontrol2, K, M );
 opt = pinv(Rd'*Rd + delta*eye(M*2, M*2))*(Rb'*Rb);
@@ -25,7 +30,7 @@ opt = pinv(Rd'*Rd + delta*eye(M*2, M*2))*(Rb'*Rb);
 filter1 = filterpred(1:M, 1);       %filter for speaker 1
 filter2 = filterpred(M+1:end, 1);   %filter for speaker 2
 
-centreindex = 445;%index of original control point for both bright and dark
+centreindex = 50;%index of original control point for both bright and dark
 
 %Applying filter to input signal
 u1=conv(x,filter1);
@@ -37,39 +42,16 @@ ydark = conv(dcontrol1(centreindex,:),u1)+conv(dcontrol2(centreindex,:),u2);
 
 %plot of both output signals for comparison
 plot(ybright);
-hold on;
-plot(ydark);
-
-%norm of this difference represents the contrast between the 2 signals
-%higher norm higher contrast
-norm(ybright-ydark)
-
-%OLD CODE BELOW
-
-%{
-H1 = channel([5, 5, 5], [7, 5, 2]); %assuming Kalman gave us the right H1(bright);
-H2 = channel([5, 5, 5], [1, 2, 3]); %assuming Kalman gave us the right H2(dark);
-rb = conv(H1, x);
-rd = conv(H2, x);
-rb = rb(end-M+1:end, 1);
-rb = flipud(rb);
-rd = rd(end-M+1:end, 1);
-rd = flipud(rd);
-K = 1000    %K is 1000 for both bright and dark
-Rb = rb';   %array of 1
-Rd = rd';   %array of 1
-opt = pinv(Rd'*Rd + delta*eye(M, M))*(Rb'*Rb);
-[filterpred, ~] = eigs(opt, 1);
-%I guess this is the required filterpred
-%Sudhanshu please check bright zone and dark zone using this filter
-xf = conv(x, filterpred);
-bz = conv(xf, H1);
-dz = conv(xf, H2);
-plot(bz);
-hold on;
-plot(dz);
 figure;
-plot(bz);
-hold on;
-plot(conv(x,  H1));
-%}
+plot(ydark);
+figure
+%plot of old and new bright zone vs darkzone for comparison  
+ybrightold = conv(bcontrol1(centreindex,:),x)+conv(bcontrol2(centreindex,:),x);
+ydarkold = conv(dcontrol1(centreindex,:),x)+conv(dcontrol2(centreindex,:),x);
+plot(ybright);
+figure;
+plot(ydark);
+%norm of this difference represents the contrast between the 2 signals higher norm higher contrast
+disp(2*norm(ybright-ydark)/(norm(ybright)+norm(ydark))*100);
+
+%Figure 1: ybright, 2: ydark, 3: ybrightold, 4: ydarkold

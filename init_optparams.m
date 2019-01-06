@@ -5,15 +5,9 @@ function [ Rb, Rd ] = init_optparams( x, dcontrol1, dcontrol2, bcontrol1, bcontr
     Rd = zeros(0, 1024*2);
     for i = 1 : K
         rB = zeros(0, 1);
-        rBtemp1 = conv(x, bcontrol1(i, :));
-        rBtemp1 = rBtemp1(end-M+1:end, 1);
-        rBtemp1 = rBtemp1';
-        rBtemp1 = fliplr(rBtemp1);
+        rBtemp1 = shortconv(x, bcontrol1(i, :), M);
         rB = [rB rBtemp1];
-        rBtemp2 = conv(x, bcontrol2(i, :));
-        rBtemp2 = rBtemp2(end-M+1:end, 1);
-        rBtemp2 = rBtemp2'; 
-        rBtemp2 = fliplr(rBtemp2);
+        rBtemp2 = shortconv(x, bcontrol2(i, :), M);
         rB = [rB rBtemp2];
         Rb = [Rb ; rB];
         disp(i);    %to check if stuck or progressing
@@ -22,18 +16,12 @@ function [ Rb, Rd ] = init_optparams( x, dcontrol1, dcontrol2, bcontrol1, bcontr
 
     for i = 1 : K
         rD = zeros(0, 1);
-        rDtemp1 = conv(x, dcontrol1(i, :));
-        rDtemp1 = rDtemp1(end-M+1:end, 1);
-        rDtemp1 = rDtemp1';
-        rDtemp1 = fliplr(rDtemp1);
+        rDtemp1 = shortconv(x, dcontrol1(i, :), M);
         rD = [rD rDtemp1];
-        rDtemp2 = conv(x, dcontrol2(i, :));
-        rDtemp2 = rDtemp2(end-M+1:end, 1);
-        rDtemp2 = rDtemp2'; 
-        rDtemp2 = fliplr(rDtemp2);
-        rD = [rD rBtemp2];
-        Rd = [Rd ; rB];
-        disp(i);    %to check if stuck or progressing
+        rDtemp2 = shortconv(x, dcontrol2(i, :), M);
+        rD = [rD rDtemp2];
+        Rd = [Rd ; rD];
+        disp(i);    % some places had b instead of d. Please check entire code for such bugs.
     end
     Rd = Rd/sqrt(K);
 

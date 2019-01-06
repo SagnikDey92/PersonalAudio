@@ -8,3 +8,7 @@ Noticed that the H we are using for kalman is not really minimum phase. Generati
 1024 reveals the truth.
 
 Ask for github ID so I can share the code. 
+
+Sudhanshu please check shortconv properly.
+Also since some parts are copypasted here and there, please check if variable names
+have been changed accordingly. Cause, I found d and b interchanged in dark and bright.

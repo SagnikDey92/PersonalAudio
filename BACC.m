@@ -25,15 +25,15 @@ opt = pinv(Rd'*Rd + delta*eye(M*2, M*2))*(Rb'*Rb);
 filter1 = filterpred(1:M, 1);       %filter for speaker 1
 filter2 = filterpred(M+1:end, 1);   %filter for speaker 2
 
-centreindex=445;%index of original control point for both bright and dark
+centreindex = 445;%index of original control point for both bright and dark
 
 %Applying filter to input signal
 u1=conv(x,filter1);
 u2=conv(x,filter2);
 
 %Applying channel to filtered input
-ybright=conv(bcontrol1(centreindex,:),u1)+conv(bcontrol2(centreindex,:),u2);
-ydark=conv(dcontrol1(centreindex,:),u1)+conv(dcontrol2(centreindex,:),u2);
+ybright = conv(bcontrol1(centreindex,:),u1)+conv(bcontrol2(centreindex,:),u2);
+ydark = conv(dcontrol1(centreindex,:),u1)+conv(dcontrol2(centreindex,:),u2);
 
 %plot of both output signals for comparison
 plot(ybright);
@@ -43,6 +43,7 @@ plot(ydark);
 %norm of this difference represents the contrast between the 2 signals
 %higher norm higher contrast
 norm(ybright-ydark)
+
 %OLD CODE BELOW
 
 %{

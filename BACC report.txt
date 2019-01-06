@@ -1,0 +1,10 @@
+convolution takes time (160000 elements). We need only first M elements of convolution.
+M is order of 1000. Can be made much faster by removing conv().
+
+Results are decent even with just 2 speakers. I'm sure more speakers will improve performance
+even further.
+
+Noticed that the H we are using for kalman is not really minimum phase. Generating till
+1024 reveals the truth.
+
+Ask for github ID so I can share the code. 

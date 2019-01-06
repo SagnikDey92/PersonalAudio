@@ -1,18 +1,11 @@
 [x,Fs] = audioread('audioshort.wav');
 x = x(:, 1);
 x = x(1:160000, 1);         % cutting audio short
-c = 340;                    % Sound velocity (m/s)
-fs = 16000;                 % Sample frequency (samples/s)
-r = [9 9 9];                % Receiver position [x y z] (m)
-s = [9 7 4];                % Source position [x y z] (m)
-L = [10 10 10];             % Room dimensions [x y z] (m)
-beta = 0.4;                 % Reverberation time (s)
 n = 512;                    % Number of samples(taking 1024 reveals  the current h has bumps after 512 too)
-SNR = 100;%high SNR
+SNR = 100;                  %high SNR
 
 %Generating h from rir_generator
-h = rir_generator(c, fs, r, s, L, beta, n);
-h = h';
+h = channel([9 7 4], [9, 9, 9], n);
 h = h(200:end, 1);
 n = 512-200+1; %cutting h to remove blank part
 hnoise = awgn(h, 100)-h;%generating noise for h

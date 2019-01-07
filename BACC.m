@@ -31,12 +31,36 @@ filters = zeros(M, 10);
 for i = 1:10
     filters(:, i) = filterpred(M*(i-1)+1:M*i, 1);
 end
+centreindex = 50;
+
+u=conv(x,filters(:,1));
+for i=2:10
+    u=[u conv(x,filters(:,i))];
+end
+ybright=conv(reshape(bcontrol(1,centreindex,:),[1 M]),u(:,1));
+ydark=conv(reshape(dcontrol(1,centreindex,:),[1 M]),u(:,1));
+for i=2:10
+    ybright=ybright + conv(reshape(bcontrol(1,centreindex,:),[1 M]),u(:,1));
+    ydark  = ydark  + conv(reshape(dcontrol(i,centreindex,:),[1 M]),u(:,i));
+end
+
+t1=conv(reshape(bcontrol(1,centreindex,:),[1 M]),x);
+t2=conv(reshape(dcontrol(1,centreindex,:),[1 M]),x);
+figure(1);
+plot(ybright);
+hold on;
+plot(ydark);
+figure(2);
+plot(t1);
+hold on;
+plot(t2);
+    %ydark=ydark+conv(dcontrol(i,centreindex,:),u(i));
 
 %{
 filter1 = filterpred(1:M, 1);       %filter for speaker 1
 filter2 = filterpred(M+1:end, 1);   %filter for speaker 2
 
-centreindex = 50;%index of original control point for both bright and dark
+%index of original control point for both bright and dark
 
 %Applying filter to input signal
 u1=conv(x,filter1);

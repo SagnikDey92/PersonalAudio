@@ -24,7 +24,7 @@ brightcentre = [ 7 7 5 ];
 [ dcontrol, bcontrol ] = init_channels(darkcentre, brightcentre, speakers);
 K = 100;
 
-[Rb, Rd] = init_optparams( x, dcontrol, bcontrol, K, M );
+[Rb, Rd] = init_optparams( x, bcontrol, dcontrol, K, M );
 opt = pinv(Rd'*Rd + delta*eye(M*10, M*10))*(Rb'*Rb);
 [filterpred, ~] = eigs(opt, 1);
 filters = zeros(M, 10);
@@ -37,15 +37,22 @@ u=conv(x,filters(:,1));
 for i=2:10
     u=[u conv(x,filters(:,i))];
 end
+
 ybright=conv(reshape(bcontrol(1,centreindex,:),[1 M]),u(:,1));
 ydark=conv(reshape(dcontrol(1,centreindex,:),[1 M]),u(:,1));
-for i=2:10
-    ybright=ybright + conv(reshape(bcontrol(1,centreindex,:),[1 M]),u(:,1));
+
+for i= 2 : 10
+    ybright = ybright + conv(reshape(bcontrol(i,centreindex,:),[1 M]),u(:,i));
     ydark  = ydark  + conv(reshape(dcontrol(i,centreindex,:),[1 M]),u(:,i));
 end
 
 t1=conv(reshape(bcontrol(1,centreindex,:),[1 M]),x);
 t2=conv(reshape(dcontrol(1,centreindex,:),[1 M]),x);
+for i = 2 : 10
+    t1 = t1 + conv(reshape(bcontrol(i,centreindex,:),[1 M]),x);
+    t2  = t2  + conv(reshape(dcontrol(i,centreindex,:),[1 M]),x);
+end
+
 figure(1);
 plot(ybright);
 hold on;
@@ -54,35 +61,3 @@ figure(2);
 plot(t1);
 hold on;
 plot(t2);
-    %ydark=ydark+conv(dcontrol(i,centreindex,:),u(i));
-
-%{
-filter1 = filterpred(1:M, 1);       %filter for speaker 1
-filter2 = filterpred(M+1:end, 1);   %filter for speaker 2
-
-%index of original control point for both bright and dark
-
-%Applying filter to input signal
-u1=conv(x,filter1);
-u2=conv(x,filter2);
-
-%Applying channel to filtered input
-ybright = conv(bcontrol1(centreindex,:),u1)+conv(bcontrol2(centreindex,:),u2);
-ydark = conv(dcontrol1(centreindex,:),u1)+conv(dcontrol2(centreindex,:),u2);
-
-%plot of both output signals for comparison
-plot(ybright);
-figure;
-plot(ydark);
-figure
-%plot of old and new bright zone vs darkzone for comparison  
-ybrightold = conv(bcontrol1(centreindex,:),x)+conv(bcontrol2(centreindex,:),x);
-ydarkold = conv(dcontrol1(centreindex,:),x)+conv(dcontrol2(centreindex,:),x);
-plot(ybright);
-figure;
-plot(ydark);
-%norm of this difference represents the contrast between the 2 signals higher norm higher contrast
-disp(2*norm(ybright-ydark)/(norm(ybright)+norm(ydark))*100);
-
-%Figure 1: ybright, 2: ydark, 3: ybrightold, 4: ydarkold
-%}

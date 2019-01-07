@@ -1,4 +1,4 @@
-function [ Rb, Rd ] = init_optparams( x, dcontrol, bcontrol, K, M )
+function [ Rb, Rd ] = init_optparams( x, bcontrol, dcontrol, K, M )
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
     Rb = zeros(0, 1024*2);

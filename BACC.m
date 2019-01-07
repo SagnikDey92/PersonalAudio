@@ -21,12 +21,18 @@ darkcentre = [ 2 7 5 ];
 brightcentre = [ 7 7 5 ];  
 
 %channel for control points below (1000 around dark zone and brightzone of volume 10x10x10 cm^3)
-[ dcontrol1, dcontrol2, bcontrol1, bcontrol2 ] = init_channels(darkcentre, brightcentre, speaker1, speaker2);
+[ dcontrol, bcontrol ] = init_channels(darkcentre, brightcentre, speakers);
 K = 100;
 
-[Rb, Rd] = init_optparams( x, dcontrol1, dcontrol2, bcontrol1, bcontrol2, K, M );
-opt = pinv(Rd'*Rd + delta*eye(M*2, M*2))*(Rb'*Rb);
+[Rb, Rd] = init_optparams( x, dcontrol, bcontrol, K, M );
+opt = pinv(Rd'*Rd + delta*eye(M*10, M*10))*(Rb'*Rb);
 [filterpred, ~] = eigs(opt, 1);
+filters = zeros(M, 10);
+for i = 1:10
+    filters(:, i) = filterpred(M*(i-1)+1:M*i, 1);
+end
+
+%{
 filter1 = filterpred(1:M, 1);       %filter for speaker 1
 filter2 = filterpred(M+1:end, 1);   %filter for speaker 2
 
@@ -55,3 +61,4 @@ plot(ydark);
 disp(2*norm(ybright-ydark)/(norm(ybright)+norm(ydark))*100);
 
 %Figure 1: ybright, 2: ydark, 3: ybrightold, 4: ydarkold
+%}

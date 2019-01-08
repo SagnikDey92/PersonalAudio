@@ -4,9 +4,10 @@ function [ res ] = shortconv( x, h, M,N )
     size_x = size(x, 1);
     I = size(h, 1);
     res = zeros(M, 1);
+    x=[zeros(I-1,1) x];
     for n = N:-1:N-M+1
-        for i = 1:I
-            res(N-n+1, 1) = res(N-n+1, 1) + h(i, 1)*x(n-i, 1);
+        for j = 1:I
+            res(n-i+1, 1) = res(n-i+1, 1) + h(j, 1)*x(i-j, 1);
         end
     end
     res = res';

@@ -5,10 +5,6 @@ delta = 0.1;                % what to do?
 x = x(1:160000, 1);         % cutting audio short
 M = 1024;                   % filter length
 
-%fiddled around with speaker and control positions
-%this gives best possible output
-speaker1 = [5.2 2 5];
-speaker2 = [5 2 5];
 %place 10 speakers along x axis centered at 5, 2, 5
 speakers = zeros(10, 3);
 index = 1;

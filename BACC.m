@@ -1,8 +1,6 @@
-%Sudhanshu I've finished it mostly. Please do the checking part cause my laptop slow.
-
 [x,Fs] = audioread('audioshort.wav');
 x = x(:, 1);
-delta = 0.1;                % what to do? 
+delta = 0.1;                
 x = x(1:160000, 1);         % cutting audio short
 M = 1024;                   % filter length
 L = 10;                     % number of speakers

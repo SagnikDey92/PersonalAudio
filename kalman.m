@@ -33,12 +33,12 @@ Ru=epsilon*eye(n);%Correlation matrix of u ,i.e uncertainitites in h
 %threshlow = 1e-5;
 
 %Testing values for variance of v and w
-%sigma2v = 1e-13;
-%sigma2w = 1e-13;
+%sigma2v = 1e-30;
+%sigma2w = 1e-30;
 
 %Estimation of channel using Kalmann Filter
 %running till the whole input is not scanned
-while index < Xsize - n
+while index < 512
     %After 1000 iterations h has been estimated 
     %So adding noise to h to see if Kalmann Filter is still able to estimate h
     if(mod(index, 1600)==0)
@@ -46,7 +46,7 @@ while index < Xsize - n
         y = conv(x, h);         %new actual received signal
         y = awgn(y, SNR);       %new actual received signal with noise
         Ru = epsilon*eye(n);    %Re intializing correlation matrix of u
-        index  = 1;             %resetting index to 1
+        %index  = 1;            %Resetting index to 1
         
         %Note : Kalmann Filter becomes very slow if index is not changed to 1
         %Problem still unresolved
@@ -70,8 +70,4 @@ end
 %plot lines for copy paste
 plot(h)
 figure
-plot(H)
-%same graph
-plot(h)
-hold on
-plot(H)
+plot(flipud(H))

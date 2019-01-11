@@ -3,12 +3,12 @@ x = x(:, 1);
 delta = 0.1;                
 x = x(1:160000, 1);         % cutting audio short
 M = 1024;                   % filter length
-L = 10;                     % number of speakers
+L = 5;                      % number of speakers
 
 %place 10 speakers along x axis centered at 5, 2, 5
 speakers = zeros(L, 3);
 index = 1;
-for i = 4.2:0.2:6
+for i = 4.6:0.2:5.4
     speakers(index, :) = [i, 2, 5];
     index = index+1;
 end

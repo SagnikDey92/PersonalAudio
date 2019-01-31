@@ -1,0 +1,5 @@
+RIR databases available online
+papers not received
+we found a paper that seems to use machine learing to esimate RIR
+More efficient communication way(chat group)
+convert code to script

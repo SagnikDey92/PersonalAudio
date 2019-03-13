@@ -1,13 +1,12 @@
-function [ filters, bcontrol, dcontrol ] = BACC2( x , delta , M, darkcentre, brightcentre, pfilter, pbcontrol, pdcontrol, thresh)
+function [ filters, bcontrol, dcontrol ] = BACC2( x , delta , M, darkcentre, brightcentre, pfilter, pbcontrol, pdcontrol, thresh, L)
 [x,Fs] = audioread('audioshort.wav');
 x = x(:, 1);            
 x = x(1:160000, 1);         % cutting audio short
-L = 5;                      % number of speakers
 
 %place 10 speakers along x axis centered at 5, 2, 5
 speakers = zeros(L, 3);
 index = 1;
-for i = 4.6:0.2:5.4
+for i = 5-floor(L/2)*0.2:0.2:5+floor(L/2)*0.2
     speakers(index, :) = [i, 2, 5];
     index = index+1;
 end
@@ -18,7 +17,7 @@ if (flg==1)
     filters = filterprev;
     return;
 end
-K = 100;
+K = 9;
 
 [Rb, Rd] = init_optparams( x, bcontrol, dcontrol, K, M, L );
 opt = pinv(Rd'*Rd + delta*eye(M*L, M*L))*(Rb'*Rb);
@@ -57,3 +56,4 @@ figure(2);
 plot(t1);
 hold on;
 plot(t2);
+pause;

@@ -2,8 +2,8 @@ function [ dcontrol, bcontrol ] = init_channels( darkcentre, brightcentre, speak
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
     n = 1024;
-    dcontrol = zeros(L, 1000, 1024);
-    bcontrol = zeros(L, 1000, 1024);
+    dcontrol = zeros(L, 100, 1024);
+    bcontrol = zeros(L, 100, 1024);
     index = 1;
     for l = 1:L
         for i = brightcentre(1)-0.04 :0.01: brightcentre(1)+0.05

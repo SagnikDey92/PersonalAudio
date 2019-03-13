@@ -3,7 +3,7 @@ x = x(:, 1);
 delta = 0.1;                
 x = x(1:160000, 1);         % cutting audio short
 M = 1024;                   % filter length
-L = 15;                      % number of speakers
+L = 7;                      % number of speakers
 
 %place 10 speakers along x axis centered at 5, 2, 5
 speakers = zeros(L, 3); %array specifying position of L speakers

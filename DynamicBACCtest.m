@@ -10,10 +10,10 @@ filters = zeros(M, L);
 darkcentre = [3, 5, 5];
 brightcentre = [6, 9, 5];
 
-dcontrol = zeros(L, 1000, 1024);
-bcontrol = zeros(L, 1000, 1024);
+dcontrol = zeros(L, 9, 1024);
+bcontrol = zeros(L, 9, 1024);
 
 for i = 1 : 3
-    [filters, bcontrol, dcontrol] = BACC2(x, delta, M, darkcentre, brightcentre, filters, bcontrol, dcontrol, thresh); 
+    [filters, bcontrol, dcontrol] = BACC2(x, delta, M, darkcentre, brightcentre, filters, bcontrol, dcontrol, thresh, L); 
     brightcentre = brightcentre + [0.1, 0.1, 0];
 end

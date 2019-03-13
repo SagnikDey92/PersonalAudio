@@ -7,12 +7,12 @@ function [ dcontrol, bcontrol, flg ] = init_channels2( x, darkcentre, brightcent
     sigma2w = 1e-20;
     
     n = 1024;
-    dcontrol = zeros(L, 1000, 1024);
-    bcontrol = zeros(L, 1000, 1024);
+    dcontrol = zeros(L, 9, 1024);
+    bcontrol = zeros(L, 9, 1024);
     index = 1;
     for l = 1:L
-        for i = brightcentre(1)-0.04 :0.01: brightcentre(1)+0.05
-            for j = brightcentre(2)-0.04 :0.01: brightcentre(2)+0.05
+        for i = brightcentre(1)-0.1 :0.1: brightcentre(1)+0.1
+            for j = brightcentre(2)-0.1 :0.1: brightcentre(2)+0.1
                 k = brightcentre(3);
                 orichannel = channel(speakers(l, :), [i j k], n);
                 simy = awgn(conv(x, orichannel), 100);
@@ -24,8 +24,8 @@ function [ dcontrol, bcontrol, flg ] = init_channels2( x, darkcentre, brightcent
         index = 1;
     end
     for l = 1:L
-        for i = darkcentre(1)-0.04 :0.01: darkcentre(1)+0.05
-            for j = darkcentre(2)-0.04 :0.01: darkcentre(2)+0.05
+        for i = darkcentre(1)-0.1 :0.1: darkcentre(1)+0.1
+            for j = darkcentre(2)-0.1 :0.1: darkcentre(2)+0.1
                 k = darkcentre(3);
                 orichannel = channel(speakers(l, :), [i j k], n);
                 simy = awgn(conv(x, orichannel), 100);

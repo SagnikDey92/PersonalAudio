@@ -26,7 +26,7 @@ filters = zeros(M, L);
 for i = 1:L
     filters(:, i) = filterpred(M*(i-1)+1:M*i, 1);
 end
-centreindex = 50;
+centreindex = 1; %remove hard coding
 
 u=conv(x,filters(:,1));
 for i=2:L

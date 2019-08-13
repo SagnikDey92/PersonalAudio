@@ -3,7 +3,7 @@ x = x(:, 1);
 x = x(1:160000, 1);         % cutting audio short
 delta = 0.1;
 M = 1024;
-L = 5;
+L = 7;
 thresh = 1e-10;
 filters = zeros(M, L);
 

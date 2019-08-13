@@ -10,6 +10,7 @@ function [ dcontrol, bcontrol, flg ] = init_channels2( x, darkcentre, brightcent
     dcontrol = zeros(L, 9, 1024);
     bcontrol = zeros(L, 9, 1024);
     index = 1;
+    %remove hard coding for control point positions
     for l = 1:L
         for i = brightcentre(1)-0.1 :0.1: brightcentre(1)+0.1
             for j = brightcentre(2)-0.1 :0.1: brightcentre(2)+0.1
@@ -36,7 +37,7 @@ function [ dcontrol, bcontrol, flg ] = init_channels2( x, darkcentre, brightcent
         end
         index = 1;
     end
-    diff = (norm(bcontrol-pbcontrol)+norm(dcontrol-pdcontrol))/(norm(bcontrol)+norm(dcontrol));
+    diff = (sqrt(sumsqr(bcontrol-pbcontrol))+sqrt(sumsqr(dcontrol-pdcontrol)))/(sqrt(sumsqr(bcontrol))+sqrt(sumsqr(dcontrol)));
     if(diff<thresh)
         flg = 1;
     end

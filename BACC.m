@@ -3,7 +3,7 @@ x = x(:, 1);
 delta = 0.1;                
 x = x(1:160000, 1);         % cutting audio short
 M = 1024;                   % filter length
-L = 5;                      % number of speakers
+L = 3;                      % number of speakers
 
 %place 10 speakers along x axis centered at 5, 2, 5
 speakers = zeros(L, 3); %array specifying position of L speakers
@@ -24,7 +24,7 @@ K = 100;
 f = @(x)min_par(x,Rb,Rd,delta);
 %opt = pinv(Rd'*Rd + delta*eye(M*L, M*L))*(Rb'*Rb);
 %[filterpred, ~] = eigs(opt, 1);
-filterpred = fminunc(f, zeros(M*L, 1));
+filterpred = fminunc(f, rand(M*L, 1));
 filters = zeros(M, L); % M length filters for all L speakers
 for i = 1:L
     filters(:, i) = filterpred(M*(i-1)+1:M*i, 1);

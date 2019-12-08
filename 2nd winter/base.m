@@ -1,3 +1,6 @@
+load('RIRdata.mat');
+%For generating data, remove load command and uncomment the below lines
+%{
 clc;
 close all;
 
@@ -83,6 +86,65 @@ for idx = 1:n_gp
     end
     desired(:, :, :, idx) = bcontrol;
 end
+%}
 
+%gonna calculate for grid point idx = 20
+idx = 20;
 
+bcontrol = bcontrol_gp(:, :, :, idx);
 
+%I assume that ZoneCoordinate always gives same output for same input
+[x, Fs] = audioread('audioshort.wav');
+x = x(1:160000, 1);
+NFFT = fl;
+X = fft(x,NFFT);
+F = ((0:1/NFFT:1-1/NFFT)*Fs).';
+bctemp = desired(:, :, :, idx);
+Y = zeros(N, fl);
+for i = 1:N
+    H = bctemp(i, 1, :);
+    H = H(:);
+    Y(i, :) = H.*X;
+end
+%Y = sum(W(i) * X * H(i));  %pointwise multiplication (.*)
+%For dark zone mics, use Y as zero vectors.
+%H(i) is from bcontrol from loudspeaker i to mic, X I have, W(i) is weight
+%vector for loudspeaker i. 
+%Finally, take IIFT for weight vector for each filter.
+
+partY = bcontrol;
+dpartY = dcontrol;
+for i = 1:N
+    for j = 1:L
+        col1 = partY(1, j, :);
+        col1 = col1(:);
+        vec = col1.*X;
+        partY(i, j, :) = vec;
+        col1 = dpartY(1, j, :);
+        col1 = col1(:);
+        vec = col1.*X;
+        dpartY(i, j, :) = vec;
+    end
+end
+
+%Optimization problem
+Weights = zeros(L, fl);
+%1024 will take a lot of time. Doing just for 10 right now 
+for i = 401:410     %make this 1 to fl for complete
+    cvx_begin quiet
+    mat = partY(:, :, i);
+    mat = mat';
+    dmat = dpartY(:, :, i);
+    dmat = dmat';
+    variable W(L) complex
+    %x = (sum(repmat(W,1,N).*mat))';
+    %minimize(norm(W-ones(L, 1)))
+    minimize(norm(Y(:, i)-(sum(repmat(W,1,N).*mat))') + norm(sum(repmat(W,1,N).*dmat)))
+    % + norm(darkreceivedsignal))
+    cvx_end
+    Weights(:, i) = W;
+end
+TWeights = (ifft(Weights'))';
+TWeights = real(TWeights);
+
+%use half of fft rest is repeated (I dont't see the repetition)

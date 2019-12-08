@@ -1,3 +1,5 @@
+load('RIRdata.mat');
+%{
 clc;
 close all;
 
@@ -77,14 +79,71 @@ desired = zeros(N, 1, fl, n_gp);
 for idx = 1:n_gp
     bright_centre = gpoints_int(idx, :); 
     b_mics = ZoneCoordinate(bright_centre, 0.15, 20);
-    bcontrol = zeros(N, L, fl); %(bright point idx, loudspeaker idx)
+    bcontrol = zeros(N, 1, fl); %(bright point idx, loudspeaker idx)
     for i = 1:N
-        for j = 1:L
-            bcontrol(i, j, :) = channel(speakers(j, :), b_mics(i,:), fl);
-        end
+        bcontrol(i, 1, :) = channel(ext_source, b_mics(i,:), fl);
     end
-    bcontrol_gp(:, :, :, idx) = bcontrol;
+    desired(:, :, :, idx) = bcontrol;
+end
+%}
+
+%gonna calculate for grid point idx = 20
+idx = 20;
+
+bcontrol = bcontrol_gp(:, :, :, idx);
+
+%I assume that ZoneCoordinate always gives same output for same input
+[x, Fs] = audioread('audioshort.wav');
+x = x(1:160000, 1);
+NFFT = fl;
+X = fft(x,NFFT);
+F = ((0:1/NFFT:1-1/NFFT)*Fs).';
+bctemp = desired(:, :, :, idx);
+Y = zeros(N, fl);
+for i = 1:N
+    H = bctemp(i, 1, :);
+    H = H(:);
+    Y(i, :) = H.*X;
+end
+%Y = sum(W(i) * X * H(i));  %pointwise multiplication (.*)
+%For dark zone mics, use Y as zero vectors.
+%H(i) is from bcontrol from loudspeaker i to mic, X I have, W(i) is weight
+%vector for loudspeaker i. 
+%Finally, take IIFT for weight vector for each filter.
+
+partY = bcontrol;
+dpartY = dcontrol;
+for i = 1:N
+    for j = 1:L
+        col1 = partY(1, j, :);
+        col1 = col1(:);
+        vec = col1.*X;
+        partY(i, j, :) = vec;
+        col1 = dpartY(1, j, :);
+        col1 = col1(:);
+        vec = col1.*X;
+        dpartY(i, j, :) = vec;
+    end
 end
 
+%Optimization problem
+Weights = zeros(L, fl);
+%1024 will take a lot of time. Doing just for 10 right now 
+for i = 401:410
+    cvx_begin quiet
+    mat = partY(:, :, i);
+    mat = mat';
+    dmat = dpartY(:, :, i);
+    dmat = smat';
+    variable W(L) complex
+    %x = (sum(repmat(W,1,N).*mat))';
+    %minimize(norm(W-ones(L, 1)))
+    minimize(norm(Y(:, i)-(sum(repmat(W,1,N).*mat))') + norm(sum(repmat(W,1,N).*dmat))))
+    % + norm(darkreceivedsignal))
+    cvx_end
+    Weights(:, i) = W;
+end
+%Got confused. Try again tomorrow. Basically just remaining to write the
+%eqn for reveived signal at mic(make vector for data of all mics) and required signal.
 
-
+%use half of fft rest is repeated (I dont't see the repetition)

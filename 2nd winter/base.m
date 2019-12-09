@@ -114,8 +114,7 @@ for idx = 1:n_gp
 
     %Optimization problem
     Weights = zeros(L, fl);
-    %1024 will take a lot of time. Doing just for 10 right now 
-    for i = 401:410     %make this 1 to fl for complete
+    for i = 1:fl
         cvx_begin quiet
         mat = partY(:, :, i);
         mat = mat';

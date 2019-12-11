@@ -127,10 +127,13 @@ for idx = 1:n_gp
         % + norm(darkreceivedsignal))
         cvx_end
         Weights(:, i) = W;
+        disp(idx);
+        disp(i);
     end
     TWeights = (ifft(Weights'))';
     TWeights = real(TWeights);
     FinalWeights(:, :, idx) = TWeights;
+    save('Results.mat', 'FinalWeights', 'idx');
 end
 
 %use half of fft rest is repeated (I dont't see the repetition)

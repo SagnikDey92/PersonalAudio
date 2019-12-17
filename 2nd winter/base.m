@@ -117,20 +117,18 @@ for idx = 1:n_gp
     for i = 1:fl
         cvx_begin quiet
         mat = partY(:, :, i);
-        mat = mat';
+        mat = mat.';
         dmat = dpartY(:, :, i);
-        dmat = dmat';
+        dmat = dmat.';
         variable W(L) complex
-        %x = (sum(repmat(W,1,N).*mat))';
-        %minimize(norm(W-ones(L, 1)))
-        minimize(norm(Y(:, i)-(sum(repmat(W,1,N).*mat))') + norm(sum(repmat(W,1,N).*dmat)))
+        minimize(norm(Y(:, i)-(sum(repmat(W,1,N).*mat)).') + norm(sum(repmat(W,1,N).*dmat)))
         % + norm(darkreceivedsignal))
         cvx_end
         Weights(:, i) = W;
         disp(idx);
         disp(i);
     end
-    TWeights = (ifft(Weights'))';
+    TWeights = (ifft(Weights.')).';
     TWeights = real(TWeights);
     FinalWeights(:, :, idx) = TWeights;
     save('Results.mat', 'FinalWeights', 'idx');
